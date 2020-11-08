@@ -31,6 +31,7 @@ void setup () {
   can1.begin();
   can1.setBaudRate(500000);
   Serial.begin(115200);
+  Serial.println("CAN Bus Begun");
 }
 
 
@@ -39,21 +40,21 @@ void setup () {
 void loop () {
 
   // Let's read our CAN received messages
-  if ( can1.read(msg) ) {
+  if ( can1.read(can1Msg) ) {
     Serial.print("CAN1 ");
-    Serial.print("MB: "); Serial.print(msg.mb);
-    Serial.print("  ID: 0x"); Serial.print(msg.id, HEX );
-    Serial.print("  EXT: "); Serial.print(msg.flags.extended );
-    Serial.print("  LEN: "); Serial.print(msg.len);
+    Serial.print("MB: "); Serial.print(can1Msg.mb);
+    Serial.print("  ID: 0x"); Serial.print(can1Msg.id, HEX );
+    Serial.print("  EXT: "); Serial.print(can1Msg.flags.extended );
+    Serial.print("  LEN: "); Serial.print(can1Msg.len);
     Serial.print(" DATA: ");
     for ( uint8_t i = 0; i < 8; i++ ) {
-      Serial.print(msg.buf[i]); Serial.print(" ");
+      Serial.print(can1Msg.buf[i]); Serial.print(" ");
     }
-    Serial.print("  time: "); Serial.println(msg.timestamp);
+    Serial.print("  time: "); Serial.println(can1Msg.timestamp);
   }
 
-  Serial.print("Number of Button Presses: ");
-  Serial.println(numberOfSwitches);
+  //  Serial.print("Number of Button Presses: ");
+  //  Serial.println(numberOfSwitches);
 
   switch (state) {
 
@@ -72,9 +73,9 @@ void loop () {
 
       // blink the LED
       digitalWrite(LED_PIN, HIGH);
-      delay(25);
-      digitalWrite(LED_PIN, LOW);
-      delay(25);
+      //      delay(100);
+      //      digitalWrite(LED_PIN, LOW);
+      //      delay(100);
 
       break;
 
