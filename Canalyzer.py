@@ -280,7 +280,7 @@ rpm_wot = np.zeros_like(motor1_dict['engineSpeed_rpm']);
 throttlebody_interpfcn = interpolate.interp1d(motor3_dict['time_s'], motor3_dict['throttleBody_pct'], fill_value = "extrapolate");
 
 for i in range(len(motor1_dict['time_s'])):
-    if(throttlebody_interpfcn(motor1_dict['time_s'][i]) >= 95):
+    if(throttlebody_interpfcn(motor1_dict['time_s'][i]) >= 99):
         # we're at ~wot
         time_wot[i] = motor1_dict['time_s'][i];
         torque_wot[i] = motor1_dict['innerMotorTorque_Nm'][i];
@@ -342,4 +342,26 @@ ax1[1, 1].set_ylabel("Percent");
 # ax1[0, 1].set_xlim(25, 50);
 # ax1[1, 1].set_xlim(25, 50);
 
+
+
+
+
+# Plot the torque/power curve for only a certain time window (e.g. a single gear)
+t_start = 28.5;
+t_end = 31.5;
+
+
+fig2, ax2 = plt.subplots();
+fig2.suptitle("Time range: t = {} to {}".format(t_start, t_end));
+start_index = (np.abs(time_wot - t_start)).argmin()
+end_index = (np.abs(time_wot - t_end)).argmin()
+
+ax2.scatter(rpm_wot[start_index:end_index], torque_wot[start_index:end_index], s = 2, color = 'blue', label = "Torque [Nm]");
+ax2.set_ylabel("Torque [Nm]");
+ax2_twin = ax2.twinx();
+ax2_twin.scatter(rpm_wot[start_index:end_index], (1/60*2*np.pi)*rpm_wot[start_index:end_index]*torque_wot[start_index:end_index]/746, s = 2, color = 'red', label = "Power [hp]");
+ax2_twin.set_ylabel("Power [hp]")
+ax2.set_xlabel("RPM")
+ax2.yaxis.label.set_color('blue')
+ax2_twin.yaxis.label.set_color('red')
 
